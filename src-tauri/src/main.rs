@@ -44,6 +44,8 @@ fn main() {
 struct Game {
   pub appid: String,
   pub name: String,
+  pub icon_path: String,
+  pub header_path: String,
 }
 #[tauri::command]
 fn find_games(state: tauri::State<State>) -> Result<Vec<Game>, String> {
@@ -54,7 +56,7 @@ fn launch_game(state: tauri::State<State>, appid: String) -> Result<(), String> 
   dbg!("asdasdasdas");
   state.steam.exec(format!("run/{}", appid));
   dbg!("running appid {}", appid);
-  Ok(())
+  std::process::exit(0);
 }
 
 struct Steam {
@@ -82,7 +84,7 @@ impl Steam {
   }
   pub fn find_games(&self) -> Vec<Game> {
     let mut games = vec![];
-    for entry in fs::read_dir(self.root_path.join("steamapps")).unwrap() {
+    'entries: for entry in fs::read_dir(self.root_path.join("steamapps")).unwrap() {
       let entry = entry.unwrap();
       let path = entry.path();
       let stem = path.file_stem().unwrap().to_str().unwrap();
@@ -101,8 +103,28 @@ impl Steam {
       let appid = lines[2].split('"').collect::<Vec<_>>()[3].to_string();
       let name = lines[4].split('"').collect::<Vec<_>>()[3].to_string();
 
-      // don't add if it doesn't have a userconfig
-      let game = Game { appid, name };
+      // don't add if it doesn't have a userconfig (proton, etc)
+      for (i, line) in lines.iter().enumerate() {
+        if line.contains("UserConfig") && lines[i + 2].contains('}') {
+          continue 'entries;
+        }
+      }
+      let libcache = self.root_path.join("appcache").join("librarycache");
+      let game = Game {
+        appid:appid.clone(),
+        name,
+        icon_path: libcache
+          .join(format!("{}_icon.jpg", appid))
+          .to_str()
+          .unwrap()
+          .to_string(),
+        header_path:
+          libcache
+          .join(format!("{}_header.jpg", appid))
+          .to_str()
+          .unwrap()
+          .to_string(),
+      };
       games.push(game);
     }
 

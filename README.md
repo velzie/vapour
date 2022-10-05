@@ -1,1 +1,1 @@
-# Vapour - a compact frontend for launching steam games
+# Vapour - an <i>aesthetic</i> frontend for launching steam games

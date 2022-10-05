@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tailwindcss -i src/app.css -o src/dist.css; rollup -c",
     "dev": "tailwindcss -i src/app.css -o src/dist.css; rollup -c -w",
-    "_dev":"HOST=10.0.1.65 rollup -c -w",
+    "_dev": "HOST=10.0.1.65 rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "tauri": "tauri"
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.1.0",
+    "98.css": "^0.1.18",
     "autoprefixer": "^10.4.12",
     "postcss": "^8.4.17",
     "sirv-cli": "^2.0.0",

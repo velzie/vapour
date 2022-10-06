@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-    --dialouge-blue: salmon !important;
-    --dialouge-blue-light:green !important;
-}
 
 .text{
     /* import pixel font */

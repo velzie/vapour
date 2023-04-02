@@ -100,6 +100,9 @@ impl Steam {
 
       manifest = manifest.replace('\t', "");
       let lines: Vec<&str> = manifest.lines().collect();
+      if lines.len() < 5 {
+        continue;
+      }
       let appid = lines[2].split('"').collect::<Vec<_>>()[3].to_string();
       let name = lines[4].split('"').collect::<Vec<_>>()[3].to_string();
 
@@ -111,15 +114,14 @@ impl Steam {
       }
       let libcache = self.root_path.join("appcache").join("librarycache");
       let game = Game {
-        appid:appid.clone(),
+        appid: appid.clone(),
         name,
         icon_path: libcache
           .join(format!("{}_icon.jpg", appid))
           .to_str()
           .unwrap()
           .to_string(),
-        header_path:
-          libcache
+        header_path: libcache
           .join(format!("{}_header.jpg", appid))
           .to_str()
           .unwrap()
